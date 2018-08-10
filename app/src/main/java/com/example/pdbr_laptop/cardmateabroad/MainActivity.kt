@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
         val valueString = inputValue.text.toString()
-        var value :Float
+        val value :Float
             value = if (valueString == ""){
                 0F
             }
@@ -59,14 +58,13 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private suspend fun fetchBankData(bankData: BankData):BankData {
-        val name = bankData.name
-        var fromCurr = localSpinner.selectedItem.toString()
-        var toCurr = homeSpinner.selectedItem.toString()
+        val fromCurr = localSpinner.selectedItem.toString()
+        val toCurr = homeSpinner.selectedItem.toString()
         val url = async {
-            URL("http://free.currencyconverterapi.com/api/v5/convert?q="+"$fromCurr"+"_"+"$toCurr"+"&compact=y").readText(Charsets.UTF_8)
+            URL("http://free.currencyconverterapi.com/api/v5/convert?q="+ fromCurr +"_"+ toCurr +"&compact=y").readText(Charsets.UTF_8)
         }
         val reader = JSONObject(url.await())
-        val currency = reader.getJSONObject("$fromCurr"+"_"+"$toCurr")
+        val currency = reader.getJSONObject(fromCurr +"_"+ toCurr)
         val rate = currency.getString("val").toFloat()
 
         bankData.rate = rate

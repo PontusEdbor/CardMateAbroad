@@ -10,7 +10,7 @@
     </string-array>
     <string name="refreshData">Refresh data</string>
     <string name="calculate">Calculate</string>
-    <string name="conversionInfo"></string>
+    <string name="conversionInfo">Conversion Info</string>
     <string name="localCurrency">Local Currency</string>
     <string name="yourCurrency">Your Currency</string>
     <string name="bankFee">Bank Fee</string>

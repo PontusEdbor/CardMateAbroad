@@ -1,8 +1,11 @@
 package com.example.pdbr_laptop.cardmateabroad
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,6 +15,10 @@ import kotlinx.coroutines.experimental.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.URL
 
 
@@ -47,6 +54,31 @@ class MainActivity : AppCompatActivity() {
                     bd = fetchBankData(bd)
                 }
             }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        try {
+            val file = OutputStreamWriter(openFileOutput("bankFee", Activity.MODE_PRIVATE))
+
+            file.write (bankFee.text.toString())
+            file.flush ()
+            file.close ()
+        } catch (e : IOException) {
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            val file = InputStreamReader(openFileInput("bankFee"))
+            val br = BufferedReader(file)
+            val line = br.readLine()
+            br.close()
+            file.close()
+            bankFee.setText(line)
+        } catch (e : IOException){
         }
     }
     @SuppressLint("SetTextI18n")

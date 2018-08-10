@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -12,7 +13,6 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import org.json.JSONObject
 import java.net.URL
-import android.widget.Spinner
 
 
 
@@ -40,17 +40,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
         @SuppressLint("SetTextI18n")
     private fun calculate(conversionRate: Float, conversionFee: Float){
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
         val valueString = inputValue.text.toString()
-        var value :Long
+        var value :Float
             value = if (valueString == ""){
-                0L
+                0F
             }
             else {
-                (valueString).toLong()
+                (valueString).toFloat()
             }
         val result = df.format(value*conversionRate*conversionFee)
         conversionInfo.text = "A purchase of: $value \nwould cost you: $result"

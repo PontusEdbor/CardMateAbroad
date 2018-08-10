@@ -39,8 +39,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-        @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n")
     private fun calculate(conversionRate: Float, conversionFee: Float){
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
@@ -56,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         conversionInfo.text = "A purchase of: $value \nwould cost you: $result"
     }
 
-    @SuppressLint("SetTextI18n")
     private suspend fun fetchBankData(bankData: BankData):BankData {
         val fromCurr = localSpinner.selectedItem.toString()
         val toCurr = homeSpinner.selectedItem.toString()

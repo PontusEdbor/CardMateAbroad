@@ -126,14 +126,28 @@
         android:id="@+id/bankFee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="138dp"
+        android:layout_marginBottom="11dp"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
         android:ems="10"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/conversionInfo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bankFeeText" />
+
+    <TextView
+        android:id="@+id/percentageSign"
+        android:layout_width="28dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="27dp"
+        android:layout_marginEnd="110dp"
+        android:layout_marginTop="30dp"
+        android:text="%"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/conversionInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bankFee" />
+        app:layout_constraintStart_toEndOf="@+id/bankFee"
+        app:layout_constraintTop_toBottomOf="@+id/homeSpinner"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>

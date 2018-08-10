@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 (valueString).toFloat()
             }
         val result = df.format(value*conversionRate*(1+conversionFee/100))
-        conversionInfo.text = "A purchase of: $value \nwould cost you: $result"
+        conversionInfo.text = "A purchase of: "+value.toString() +"\nwould cost you: " +result.toString()
     }
 
     private suspend fun fetchBankData(bankData: BankData):BankData {

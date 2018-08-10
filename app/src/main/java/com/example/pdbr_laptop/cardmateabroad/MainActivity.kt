@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -30,7 +31,12 @@ class MainActivity : AppCompatActivity() {
         var bd = BankData("Handelsbanken",8.8F,1.016F)
         launch (UI){
             calculateButton.setOnClickListener {
-                calculate(bd.rate, bd.fee)
+                if (bankFee.text.toString().toFloatOrNull() != null){
+                    calculate(bd.rate, bankFee.text.toString().toFloat())
+                }
+                else {
+                    Toast.makeText(this@MainActivity, "Invalid Bank Fee", Toast.LENGTH_SHORT).show()
+                }
             }
             refreshButton.setOnClickListener {
                 launch (UI){
@@ -51,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 (valueString).toFloat()
             }
-        val result = df.format(value*conversionRate*conversionFee)
+        val result = df.format(value*conversionRate*(1+conversionFee/100))
         conversionInfo.text = "A purchase of: $value \nwould cost you: $result"
     }
 

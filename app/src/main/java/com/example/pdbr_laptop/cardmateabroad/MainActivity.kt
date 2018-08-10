@@ -27,8 +27,12 @@ class MainActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         localSpinner.adapter = adapter
         homeSpinner.adapter = adapter
+        homeSpinner.setSelection(1)
 
-        var bd = BankData("Handelsbanken",8.8F,1.016F)
+        var bd = BankData("Handelsbanken",9F,1.016F)
+        launch(UI) {
+            bd = fetchBankData(bd)
+        }
         launch (UI){
             calculateButton.setOnClickListener {
                 if (bankFee.text.toString().toFloatOrNull() != null){

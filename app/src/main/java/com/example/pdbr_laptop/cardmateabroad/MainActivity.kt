@@ -74,8 +74,8 @@ class MainActivity : AppCompatActivity() {
     private fun calculate(conversionRate: Float, conversionFee: Float){
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
-        val fromCurr = localSpinner.selectedItem.toString()
-        val toCurr = homeSpinner.selectedItem.toString()
+        //val fromCurr = localSpinner.selectedItem.toString()
+        //val toCurr = homeSpinner.selectedItem.toString()
         val valueString = inputValue.text.toString()
         val value :Float
             value = if (valueString == ""){
@@ -91,14 +91,18 @@ class MainActivity : AppCompatActivity() {
     private suspend fun fetchBankData(bankData: BankData):BankData {
         val fromCurr = localSpinner.selectedItem.toString()
         val toCurr = homeSpinner.selectedItem.toString()
-        val url = async {
-            URL("http://free.currencyconverterapi.com/api/v5/convert?q="+ fromCurr +"_"+ toCurr +"&compact=y").readText(Charsets.UTF_8)
+        try {
+            val url = async {
+                URL("http://free.currencyconverterapi.com/api/v5/convert?q=" + fromCurr + "_" + toCurr + "&compact=y").readText(Charsets.UTF_8)
+            }
+            val reader = JSONObject(url.await())
+            val currency = reader.getJSONObject(fromCurr +"_"+ toCurr)
+            val rate = currency.getString("val").toFloat()
+            bankData.rate = rate
+        } catch (e: Exception){
+            Toast.makeText(this@MainActivity, "Bank data could not be fetched", Toast.LENGTH_SHORT).show()
         }
-        val reader = JSONObject(url.await())
-        val currency = reader.getJSONObject(fromCurr +"_"+ toCurr)
-        val rate = currency.getString("val").toFloat()
 
-        bankData.rate = rate
 
         return bankData
     }

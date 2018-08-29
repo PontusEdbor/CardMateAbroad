@@ -1,8 +1,11 @@
 package com.example.pdbr_laptop.cardmateabroad
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,6 +15,10 @@ import kotlinx.coroutines.experimental.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.URL
 
 
@@ -49,10 +56,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        saveBankFee()
+        saveHomeCurrency()
+        saveLocalCurrency()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        retrieveBankFee()
+        retrieveHomeCurrency()
+        retrieveLocalCurrency()
+    }
     @SuppressLint("SetTextI18n")
     private fun calculate(conversionRate: Float, conversionFee: Float){
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
+        val fromCurr = localSpinner.selectedItem.toString()
+        val toCurr = homeSpinner.selectedItem.toString()
         val valueString = inputValue.text.toString()
         val value :Float
             value = if (valueString == ""){
@@ -62,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 (valueString).toFloat()
             }
         val result = df.format(value*conversionRate*(1+conversionFee/100))
-        conversionInfo.text = "A purchase of: "+value.toString() +"\nwould cost you: " +result.toString()
+        conversionInfo.text = "A purchase of: "+value.toString()+"\nwould cost you: " +result.toString()
     }
 
     private suspend fun fetchBankData(bankData: BankData):BankData {
@@ -78,5 +101,52 @@ class MainActivity : AppCompatActivity() {
         bankData.rate = rate
 
         return bankData
+    }
+    private fun retrieveBankFee (){
+        bankFee.setText(retrieveSavedValue("Bank Fee"))
+    }
+    private fun retrieveLocalCurrency (){
+        val value = retrieveSavedValue("Local Currency").toIntOrNull()
+        if (value != null) {
+            localSpinner.setSelection(value)
+        }
+    }
+    private fun retrieveHomeCurrency (){
+        val value = retrieveSavedValue("Home Currency").toIntOrNull()
+        if (value != null) {
+            homeSpinner.setSelection(value)
+        }
+    }
+    private fun retrieveSavedValue (filename:String) :String{
+        var line = ""
+        try {
+            val file = InputStreamReader(openFileInput(filename))
+            val br = BufferedReader(file)
+            line = br.readLine()
+            br.close()
+            file.close()
+            return line
+        } catch (e : IOException){
+        }
+        return line
+    }
+    private fun saveBankFee(){
+        saveSingleLine("Bank Fee",bankFee.text.toString())
+    }
+    private fun saveLocalCurrency (){
+        saveSingleLine("Local Currency",localSpinner.selectedItemPosition.toString())
+    }
+    private fun saveHomeCurrency () {
+        saveSingleLine("Home Currency",homeSpinner.selectedItemPosition.toString())
+    }
+    private fun saveSingleLine(name:String,value:String){
+        try {
+            val file = OutputStreamWriter(openFileOutput(name, Activity.MODE_PRIVATE))
+
+            file.write (value)
+            file.flush ()
+            file.close ()
+        } catch (e : IOException) {
+        }
     }
 }
